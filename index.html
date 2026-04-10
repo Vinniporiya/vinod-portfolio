@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vinod Kumar Ph.D. — Computational Biologist</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Syne+Mono&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #020810;
+  --bg2: #040f1c;
+  --panel: rgba(4,20,40,0.85);
+  --teal: #00e5ff;
+  --teal2: #00b4d8;
+  --green: #00ff9f;
+  --gold: #ffd166;
+  --white: #e8f4f8;
+  --muted: #5a8a9f;
+  --border: rgba(0,229,255,0.15);
+  --glow: 0 0 20px rgba(0,229,255,0.25);
+  --serif: 'Syne', sans-serif;
+  --mono: 'Syne Mono', monospace;
+  --body: 'Inter', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--white);
+  font-family:var(--body);
+  font-size:16px;
+  line-height:1.7;
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* ── CUSTOM CURSOR ── */
+#cursor{
+  position:fixed;
+  width:12px;height:12px;
+  background:var(--teal);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:transform 0.1s,background 0.2s,width 0.2s,height 0.2s;
+  mix-blend-mode:screen;
+}
+#cursor-ring{
+  position:fixed;
+  width:36px;height:36px;
+  border:1px solid rgba(0,229,255,0.5);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:9998;
+  transform:translate(-50%,-50%);
+  transition:transform 0.18s ease,width 0.2s,height 0.2s,border-color 0.2s;
+}
+body:has(a:hover) #cursor,body:has(button:hover) #cursor{width:20px;height:20px;background:var(--green)}
+body:has(a:hover) #cursor-ring,body:has(button:hover) #cursor-ring{width:60px;height:60px;border-color:rgba(0,255,159,0.4)}
+
+/* ── CANVAS BG ── */
+#dna-canvas{
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  z-index:0;
+  pointer-events:none;
+}
+
+/* ── PARTICLE FIELD ── */
+#particle-canvas{
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  z-index:1;
+  pointer-events:none;
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:200;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:1.2rem 4rem;
+  background:rgba(2,8,16,0.8);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-brand{
+  font-family:var(--mono);
+  font-size:13px;
+  color:var(--teal);
+  letter-spacing:0.06em;
+  display:flex;
+  align-items:center;
+  gap:0.6rem;
+}
+.nav-brand::before{
+  content:'';
+  width:8px;height:8px;
+  background:var(--green);
+  border-radius:50%;
+  animation:blink 2s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{
+  font-size:11px;font-weight:500;
+  color:var(--muted);
+  text-decoration:none;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  transition:color 0.2s;
+  position:relative;
+}
+.nav-links a::after{
+  content:'';
+  position:absolute;bottom:-4px;left:0;right:0;
+  height:1px;background:var(--teal);
+  transform:scaleX(0);
+  transition:transform 0.25s;
+}
+.nav-links a:hover{color:var(--teal)}
+.nav-links a:hover::after{transform:scaleX(1)}
+
+/* ── SECTIONS ── */
+section{
+  position:relative;
+  z-index:10;
+  max-width:1200px;
+  margin:0 auto;
+  padding:5rem 4rem;
+}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding-top:9rem;
+  padding-bottom:4rem;
+  position:relative;
+}
+.hero-tag{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.2em;
+  color:var(--green);
+  text-transform:uppercase;
+  margin-bottom:1.5rem;
+  display:flex;
+  align-items:center;
+  gap:0.8rem;
+}
+.hero-tag::before{
+  content:'';
+  display:inline-block;
+  width:40px;height:1px;
+  background:var(--green);
+}
+.hero h1{
+  font-family:var(--serif);
+  font-size:clamp(3.5rem,8vw,7rem);
+  font-weight:800;
+  line-height:0.95;
+  letter-spacing:-0.03em;
+  margin-bottom:1.5rem;
+  position:relative;
+}
+.hero h1 .line1{color:var(--white)}
+.hero h1 .line2{
+  color:transparent;
+  -webkit-text-stroke:1px var(--teal);
+  display:block;
+}
+.hero h1 .line3{
+  color:var(--teal);
+  display:block;
+  text-shadow:0 0 40px rgba(0,229,255,0.4);
+}
+
+/* genome sequence typewriter */
+#genome-seq{
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--muted);
+  letter-spacing:0.15em;
+  margin-bottom:2rem;
+  height:20px;
+  overflow:hidden;
+}
+#genome-seq span{color:var(--teal)}
+
+.hero-desc{
+  font-size:16px;
+  color:var(--muted);
+  line-height:1.85;
+  max-width:580px;
+  margin-bottom:3rem;
+}
+.hero-desc strong{color:var(--white)}
+
+.hero-ctas{display:flex;gap:1.2rem;flex-wrap:wrap;margin-bottom:4rem}
+.btn-glow{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  background:transparent;
+  border:1px solid var(--teal);
+  color:var(--teal);
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  padding:0.85rem 2rem;
+  text-decoration:none;
+  position:relative;
+  overflow:hidden;
+  transition:color 0.3s;
+}
+.btn-glow::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:var(--teal);
+  transform:translateX(-101%);
+  transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.btn-glow:hover{color:var(--bg)}
+.btn-glow:hover::before{transform:translateX(0)}
+.btn-glow span{position:relative;z-index:1}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  color:var(--muted);
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  padding:0.85rem 2rem;
+  text-decoration:none;
+  border:1px solid rgba(90,138,159,0.3);
+  transition:color 0.2s,border-color 0.2s;
+}
+.btn-ghost:hover{color:var(--white);border-color:rgba(90,138,159,0.6)}
+
+/* ── FLOATING STATS ── */
+.hero-stats{
+  display:flex;
+  gap:0;
+  border:1px solid var(--border);
+  background:var(--panel);
+  backdrop-filter:blur(12px);
+  width:fit-content;
+  max-width:100%;
+}
+.hstat{
+  padding:1.2rem 2rem;
+  border-right:1px solid var(--border);
+  position:relative;
+  overflow:hidden;
+}
+.hstat:last-child{border-right:none}
+.hstat::after{
+  content:'';
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg,transparent,var(--teal),transparent);
+  transform:translateX(-100%);
+  transition:transform 0.6s;
+}
+.hstat:hover::after{transform:translateX(0)}
+.hstat-n{
+  font-family:var(--serif);
+  font-size:2rem;
+  font-weight:800;
+  color:var(--teal);
+  line-height:1;
+  margin-bottom:0.25rem;
+}
+.hstat-l{font-size:11px;color:var(--muted);letter-spacing:0.08em}
+
+/* ── SECTION HEADERS ── */
+.sec-kicker{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.2em;
+  color:var(--teal);
+  text-transform:uppercase;
+  margin-bottom:0.8rem;
+  display:flex;
+  align-items:center;
+  gap:1rem;
+}
+.sec-kicker::after{
+  content:'';
+  flex:1;
+  max-width:80px;
+  height:1px;
+  background:var(--teal);
+  opacity:0.4;
+}
+.sec-title{
+  font-family:var(--serif);
+  font-size:clamp(2rem,4vw,3rem);
+  font-weight:800;
+  color:var(--white);
+  line-height:1.1;
+  margin-bottom:1rem;
+  letter-spacing:-0.02em;
+}
+
+/* ── MOLECULAR NETWORK SECTION ── */
+#network-section{
+  background:var(--bg2);
+  position:relative;
+  overflow:hidden;
+}
+#mol-canvas{
+  width:100%;
+  height:400px;
+  display:block;
+  cursor:crosshair;
+}
+.network-overlay{
+  position:absolute;
+  top:50%;right:4rem;
+  transform:translateY(-50%);
+  width:280px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  padding:1.5rem;
+  backdrop-filter:blur(10px);
+  pointer-events:none;
+}
+.network-overlay h3{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:0.1em;
+  color:var(--teal);
+  text-transform:uppercase;
+  margin-bottom:0.8rem;
+}
+.network-overlay p{font-size:12px;color:var(--muted);line-height:1.6}
+.net-tag{
+  display:inline-block;
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--green);
+  background:rgba(0,255,159,0.08);
+  border:1px solid rgba(0,255,159,0.2);
+  padding:2px 8px;
+  margin:2px;
+}
+
+/* ── EXPERTISE CARDS with 3D TILT ── */
+.exp-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1.5px;
+  background:var(--border);
+  border:1px solid var(--border);
+  margin-top:3rem;
+}
+.exp-card{
+  background:var(--bg);
+  padding:2rem;
+  position:relative;
+  overflow:hidden;
+  transition:background 0.3s;
+  cursor:default;
+}
+.exp-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg,var(--teal),var(--green));
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform 0.4s;
+}
+.exp-card:hover{background:rgba(0,229,255,0.03)}
+.exp-card:hover::before{transform:scaleX(1)}
+.exp-card-icon{
+  font-size:32px;
+  margin-bottom:1rem;
+  display:block;
+  filter:drop-shadow(0 0 8px rgba(0,229,255,0.4));
+}
+.exp-card h3{
+  font-family:var(--mono);
+  font-size:13px;
+  color:var(--white);
+  letter-spacing:0.06em;
+  margin-bottom:0.5rem;
+}
+.exp-card p{font-size:13px;color:var(--muted);line-height:1.65}
+.exp-card .corner-tag{
+  position:absolute;
+  bottom:1rem;right:1rem;
+  font-family:var(--mono);
+  font-size:9px;
+  color:var(--teal);
+  opacity:0.4;
+  letter-spacing:0.08em;
+}
+
+/* ── TIMELINE ── */
+.timeline{
+  position:relative;
+  padding-left:2rem;
+}
+.timeline::before{
+  content:'';
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:1px;
+  background:linear-gradient(to bottom,var(--teal),rgba(0,229,255,0.1));
+}
+.tl-item{
+  position:relative;
+  margin-bottom:3.5rem;
+}
+.tl-item::before{
+  content:'';
+  position:absolute;
+  left:-2rem;top:6px;
+  margin-left:-4px;
+  width:9px;height:9px;
+  background:var(--teal);
+  border-radius:50%;
+  box-shadow:0 0 12px var(--teal);
+}
+.tl-date{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:0.15em;
+  color:var(--teal);
+  text-transform:uppercase;
+  margin-bottom:0.4rem;
+}
+.tl-role{
+  font-family:var(--serif);
+  font-size:1.15rem;
+  font-weight:700;
+  color:var(--white);
+  margin-bottom:0.2rem;
+}
+.tl-org{font-size:13px;color:var(--muted);margin-bottom:0.8rem}
+.tl-bullets{list-style:none}
+.tl-bullets li{
+  font-size:13px;
+  color:var(--muted);
+  padding:0.25rem 0 0.25rem 1rem;
+  position:relative;
+  line-height:1.65;
+  border-left:1px solid transparent;
+  transition:border-color 0.2s,color 0.2s;
+}
+.tl-bullets li::before{
+  content:'▸';
+  position:absolute;left:0;
+  color:var(--teal);font-size:10px;top:6px;
+}
+.tl-bullets li:hover{border-left-color:var(--teal);color:var(--white)}
+.tl-bullets li strong{color:var(--white);font-weight:500}
+
+/* ── PUBLICATIONS ── */
+.pub-list{display:flex;flex-direction:column;gap:1px;background:var(--border)}
+.pub-item{
+  background:var(--bg);
+  padding:1.4rem 1.8rem;
+  display:grid;
+  grid-template-columns:48px 1fr auto;
+  gap:1rem;
+  align-items:start;
+  position:relative;
+  transition:background 0.25s;
+  cursor:default;
+}
+.pub-item::after{
+  content:'';
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:2px;
+  background:var(--teal);
+  transform:scaleY(0);
+  transition:transform 0.3s;
+}
+.pub-item:hover{background:rgba(0,229,255,0.03)}
+.pub-item:hover::after{transform:scaleY(1)}
+.pub-n{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--teal);
+  padding-top:3px;
+}
+.pub-title{
+  font-size:14px;
+  font-weight:500;
+  color:var(--white);
+  margin-bottom:0.25rem;
+  line-height:1.5;
+}
+.pub-authors{font-size:12px;color:var(--muted)}
+.pub-venue{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--teal);
+  white-space:nowrap;
+  padding-top:3px;
+}
+.pub-badge{
+  display:inline-block;
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:0.08em;
+  padding:2px 7px;
+  margin-left:0.4rem;
+  border-radius:1px;
+}
+.pb-first{background:rgba(0,229,255,0.1);color:var(--teal);border:1px solid rgba(0,229,255,0.2)}
+.pb-preprint{background:rgba(255,209,102,0.1);color:var(--gold);border:1px solid rgba(255,209,102,0.2)}
+
+/* ── TOOLS ── */
+.tools-hex{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:1px;
+  background:var(--border);
+}
+.tool-hex{
+  background:var(--bg2);
+  padding:1.2rem;
+  position:relative;
+  text-decoration:none;
+  display:block;
+  transition:background 0.2s;
+  overflow:hidden;
+}
+.tool-hex::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,rgba(0,229,255,0.05),transparent);
+  opacity:0;
+  transition:opacity 0.3s;
+}
+.tool-hex:hover{background:rgba(0,229,255,0.06)}
+.tool-hex:hover::before{opacity:1}
+.tool-hex-name{
+  font-family:var(--mono);
+  font-size:13px;
+  color:var(--teal);
+  margin-bottom:0.3rem;
+  letter-spacing:0.04em;
+}
+.tool-hex-desc{font-size:11px;color:var(--muted);line-height:1.5}
+.tool-hex-url{
+  font-family:var(--mono);
+  font-size:9px;
+  color:var(--muted);
+  margin-top:0.5rem;
+  opacity:0.5;
+}
+
+/* ── SKILL TERMINAL ── */
+.terminal{
+  background:#010609;
+  border:1px solid var(--border);
+  font-family:var(--mono);
+  font-size:12px;
+  padding:1.5rem;
+  position:relative;
+  margin-top:2rem;
+}
+.terminal-bar{
+  display:flex;
+  gap:0.5rem;
+  margin-bottom:1.2rem;
+}
+.terminal-dot{
+  width:10px;height:10px;
+  border-radius:50%;
+}
+.td1{background:#ff5f57}.td2{background:#ffbd2e}.td3{background:#28ca41}
+.terminal-line{
+  display:flex;
+  margin-bottom:0.4rem;
+  flex-wrap:wrap;
+  gap:0.3rem;
+}
+.t-prompt{color:var(--teal)}
+.t-cmd{color:var(--white)}
+.t-out{color:var(--muted);padding-left:1.2rem}
+.t-tag{
+  display:inline-block;
+  padding:1px 8px;
+  font-size:10px;
+  letter-spacing:0.06em;
+  margin:2px;
+}
+.tt-blue{background:rgba(0,229,255,0.1);color:var(--teal);border:1px solid rgba(0,229,255,0.15)}
+.tt-green{background:rgba(0,255,159,0.08);color:var(--green);border:1px solid rgba(0,255,159,0.15)}
+.tt-gold{background:rgba(255,209,102,0.1);color:var(--gold);border:1px solid rgba(255,209,102,0.15)}
+.t-cursor{
+  display:inline-block;
+  width:8px;height:14px;
+  background:var(--teal);
+  animation:blink 1s step-end infinite;
+  vertical-align:middle;
+}
+
+/* ── CONTACT ── */
+.contact-section{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:4rem;
+  align-items:center;
+  margin-top:3rem;
+}
+.contact-big{
+  font-family:var(--serif);
+  font-size:clamp(2rem,5vw,3.5rem);
+  font-weight:800;
+  line-height:1.1;
+  letter-spacing:-0.02em;
+}
+.contact-big em{
+  display:block;
+  color:transparent;
+  -webkit-text-stroke:1px var(--teal);
+}
+.contact-links{display:flex;flex-direction:column;gap:0.8rem}
+.clink{
+  display:flex;align-items:center;gap:1rem;
+  text-decoration:none;
+  padding:0.9rem 1.2rem;
+  border:1px solid var(--border);
+  transition:border-color 0.2s,background 0.2s;
+  position:relative;
+  overflow:hidden;
+}
+.clink::before{
+  content:'';
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:2px;
+  background:var(--teal);
+  transform:scaleY(0);
+  transition:transform 0.25s;
+}
+.clink:hover{background:rgba(0,229,255,0.04);border-color:rgba(0,229,255,0.3)}
+.clink:hover::before{transform:scaleY(1)}
+.clink-icon{
+  width:36px;height:36px;
+  background:rgba(0,229,255,0.08);
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;flex-shrink:0;
+}
+.clink-label{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase}
+.clink-value{font-size:13px;color:var(--white);margin-top:1px}
+
+/* ── DIVIDER ── */
+.divider{
+  border:none;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--border),transparent);
+  margin:0;
+}
+
+/* ── FOOTER ── */
+footer{
+  text-align:center;
+  padding:2.5rem 4rem;
+  border-top:1px solid var(--border);
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--muted);
+  letter-spacing:0.08em;
+  position:relative;
+  z-index:10;
+}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.65s ease,transform 0.65s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* ── GLITCH ── */
+.glitch{position:relative}
+.glitch::before,.glitch::after{
+  content:attr(data-text);
+  position:absolute;left:0;top:0;
+  width:100%;height:100%;
+  opacity:0;
+}
+.glitch::before{color:var(--teal);animation:glitch1 4s infinite}
+.glitch::after{color:var(--green);animation:glitch2 4s infinite}
+@keyframes glitch1{
+  0%,90%,100%{opacity:0;clip-path:none}
+  92%{opacity:0.7;clip-path:polygon(0 15%,100% 15%,100% 30%,0 30%);transform:translate(-2px)}
+  94%{opacity:0.7;clip-path:polygon(0 60%,100% 60%,100% 75%,0 75%);transform:translate(2px)}
+  96%{opacity:0;clip-path:none}
+}
+@keyframes glitch2{
+  0%,93%,100%{opacity:0;clip-path:none}
+  95%{opacity:0.5;clip-path:polygon(0 40%,100% 40%,100% 55%,0 55%);transform:translate(3px)}
+  97%{opacity:0;clip-path:none}
+}
+
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem}
+  .nav-links{display:none}
+  section{padding:4rem 1.5rem}
+  .hero h1{font-size:3rem}
+  .exp-grid{grid-template-columns:1fr}
+  .contact-section{grid-template-columns:1fr}
+  .pub-item{grid-template-columns:40px 1fr}
+  .pub-venue{display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<canvas id="dna-canvas"></canvas>
+<canvas id="particle-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">VK_PhD · computational_biology</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#publications">Publications</a></li>
+    <li><a href="#tools">Tools</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="about">
+  <div class="hero-tag">Postdoctoral Researcher · Available April 2026</div>
+  <h1>
+    <span class="line1">VINOD</span>
+    <span class="line2 glitch" data-text="KUMAR">KUMAR</span>
+    <span class="line3">Ph.D.</span>
+  </h1>
+  <div id="genome-seq">
+    <span id="seq-text"></span><span class="t-cursor"></span>
+  </div>
+  <p class="hero-desc">
+    Computational biologist with <strong>8+ years</strong> at the frontier of multi-omics, 
+    single-cell genomics, and AI/ML-driven discovery. Formerly at 
+    <strong>NIH National Institute on Aging</strong> and <strong>University of Arizona</strong>, 
+    building tools that decode disease at molecular resolution.
+  </p>
+  <div class="hero-ctas">
+    <a href="mailto:vinodporiya032@gmail.com" class="btn-glow"><span>&#9993; Get in touch</span></a>
+    <a href="https://scholar.google.com/citations?user=Hg1nFFQAAAAJ" target="_blank" class="btn-ghost">&#x25A6; Google Scholar</a>
+    <a href="https://github.com/Vinniporiya" target="_blank" class="btn-ghost">&#x2022; GitHub</a>
+    <a href="https://orcid.org/0000-0001-8098-9901" target="_blank" class="btn-ghost">ID ORCID</a>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat">
+      <div class="hstat-n" id="n-pubs">0</div>
+      <div class="hstat-l">Publications</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-n" id="n-cite">0</div>
+      <div class="hstat-l">Citations</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-n" id="n-tools">0</div>
+      <div class="hstat-l">Open-source tools</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-n" id="n-years">0</div>
+      <div class="hstat-l">Years research</div>
+    </div>
+  </div>
+</section>
+
+<!-- MOLECULAR NETWORK -->
+<div id="network-section" style="position:relative;z-index:10">
+  <canvas id="mol-canvas"></canvas>
+  <div class="network-overlay">
+    <h3>&#x2609; Interactive Network</h3>
+    <p style="margin-bottom:0.8rem">Move your cursor over the canvas to perturb the molecular interaction network. Each node represents a biological entity; edges encode regulatory relationships.</p>
+    <div>
+      <span class="net-tag">snRNA-seq</span>
+      <span class="net-tag">ATAC-seq</span>
+      <span class="net-tag">Hi-C</span>
+      <span class="net-tag">WGS</span>
+      <span class="net-tag">cfDNA</span>
+      <span class="net-tag">Proteomics</span>
+    </div>
+  </div>
+</div>
+
+<!-- EXPERTISE -->
+<section>
+  <div class="reveal">
+    <div class="sec-kicker">01 — Expertise</div>
+    <h2 class="sec-title">Where biology<br>meets machine learning</h2>
+  </div>
+  <div class="exp-grid reveal">
+    <div class="exp-card">
+      <span class="exp-card-icon">⬡</span>
+      <h3>Single-Cell & Spatial</h3>
+      <p>snRNA-seq, ATAC-seq, spatial transcriptomics integration across species and conditions. Seurat, ArchR, Celloracle, Cell2location.</p>
+      <div class="corner-tag">SC · SP</div>
+    </div>
+    <div class="exp-card">
+      <span class="exp-card-icon">◈</span>
+      <h3>Machine Learning / AI</h3>
+      <p>SVM, random forests, neural networks applied to high-dimensional biological data. Active development in deep learning for genomics.</p>
+      <div class="corner-tag">ML · AI</div>
+    </div>
+    <div class="exp-card">
+      <span class="exp-card-icon">⬟</span>
+      <h3>Functional Genomics</h3>
+      <p>Transcriptome-wide aberrant expression and splicing (DESeq2, OUTRIDER, FRASER). GWAS variant annotation and whole-genome sequencing.</p>
+      <div class="corner-tag">FG · VC</div>
+    </div>
+    <div class="exp-card">
+      <span class="exp-card-icon">◉</span>
+      <h3>Disease Biology</h3>
+      <p>Translational applications in ALS, hypertension, cancer, Alzheimer's — bridging computational predictions to pre-clinical insights.</p>
+      <div class="corner-tag">TX · DB</div>
+    </div>
+    <div class="exp-card">
+      <span class="exp-card-icon">⌬</span>
+      <h3>Reproducible Pipelines</h3>
+      <p>HPC/SLURM, Git, Docker/Singularity, Python, R, Bash. Scalable, documented workflows for multi-institutional projects.</p>
+      <div class="corner-tag">HPC · CI</div>
+    </div>
+    <div class="exp-card">
+      <span class="exp-card-icon">✦</span>
+      <h3>Open-Source Tools</h3>
+      <p>12 deployed web servers and databases with global users — converting methodological innovation into accessible computational infrastructure.</p>
+      <div class="corner-tag">OS · DB</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="reveal">
+    <div class="sec-kicker">02 — Experience</div>
+    <h2 class="sec-title">Research journey</h2>
+  </div>
+  <div class="timeline reveal" style="margin-top:3rem">
+    <div class="tl-item">
+      <div class="tl-date">Dec 2023 — Feb 2025</div>
+      <div class="tl-role">Postdoctoral Research Associate III</div>
+      <div class="tl-org">University of Arizona · Dept. of Physiology · Lab of Prof. Mingyu Liang · Tucson, AZ</div>
+      <ul class="tl-bullets">
+        <li><strong>Multi-species atlas:</strong> Led snRNA-seq + ATAC-seq analysis across 6+ species; built snMRHDB — first multi-species single-cell hypertension reference (manuscript under review, Science).</li>
+        <li>Applied Seurat, ArchR, Celloracle, Cell2location, CellChat for integrated regulatory and cell-communication analysis.</li>
+        <li>Coordinated analysis pipelines across University of Arizona, MCW, and MSMI on HPC/SLURM clusters.</li>
+      </ul>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Dec 2021 — Dec 2023</div>
+      <div class="tl-role">Postdoctoral Fellow</div>
+      <div class="tl-org">National Institute on Aging (NIH) · Intramural Research Program · Bethesda, MD</div>
+      <ul class="tl-bullets">
+        <li><strong>ALS transcriptomics:</strong> Characterised aberrant expression and splicing from the NY Genome Center ALS Consortium using OUTRIDER, FRASER, DESeq2; built ALS classification framework.</li>
+        <li><strong>Rare variant discovery:</strong> SpliceAI + PrimateAI on WGS data identified LBD/FTD pathogenic variants (American Genome Center); built CDC ALS data annotation pipeline.</li>
+      </ul>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Aug 2015 — Aug 2020</div>
+      <div class="tl-role">Doctoral Research Fellow (Ph.D.)</div>
+      <div class="tl-org">CSIR-Institute of Microbial Technology · Lab of Prof. G.P.S. Raghava · Chandigarh, India</div>
+      <ul class="tl-bullets">
+        <li><strong>12 open-access tools built:</strong> ML-based prediction servers for BBB peptides, haemotoxicity, cell-penetrating peptides, and cancer genomics databases.</li>
+        <li>5 first-author publications across Pharmaceutics, Frontiers in Pharmacology, Frontiers in Microbiology.</li>
+        <li>CSIR-UGC Junior & Senior Research Fellowship — Ministry of Science & Technology, Govt. of India.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PUBLICATIONS -->
+<section id="publications">
+  <div class="reveal">
+    <div class="sec-kicker">03 — Publications</div>
+    <h2 class="sec-title">Selected research output</h2>
+    <p style="color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:0.08em;margin-bottom:2rem;margin-top:0.5rem">14 PEER-REVIEWED · 5 FIRST-AUTHOR · 500+ CITATIONS · 3 BOOK CHAPTERS · (* = FIRST AUTHOR)</p>
+  </div>
+  <div class="pub-list reveal">
+    <div class="pub-item">
+      <div class="pub-n">01</div>
+      <div>
+        <div class="pub-title">A single-cell map of hypertension <span class="pub-badge pb-preprint">PREPRINT</span></div>
+        <div class="pub-authors">Qiu Q., Liu Y., …, <strong>Kumar V.</strong>, …, Liang M. · bioRxiv 2024 · <em>Science</em> (under review)</div>
+      </div>
+      <div class="pub-venue">Science (rev.) · 2024</div>
+    </div>
+    <div class="pub-item">
+      <div class="pub-n">02</div>
+      <div>
+        <div class="pub-title">B3Pred: A Random-Forest-Based Method for Predicting Blood–Brain Barrier Penetrating Peptides <span class="pub-badge pb-first">1st AUTHOR</span></div>
+        <div class="pub-authors"><strong>Kumar V.</strong>, Patiyal S., Dhall A., Sharma N., Raghava G.P.S.</div>
+      </div>
+      <div class="pub-venue">Pharmaceutics · 2021</div>
+    </div>
+    <div class="pub-item">
+      <div class="pub-n">03</div>
+      <div>
+        <div class="pub-title">B3Pdb: an archive of blood–brain barrier-penetrating peptides <span class="pub-badge pb-first">1st AUTHOR</span></div>
+        <div class="pub-authors"><strong>Kumar V.</strong>, Patiyal S., Kumar R. et al.</div>
+      </div>
+      <div class="pub-venue">Brain Struct. Funct. · 2021</div>
+    </div>
+    <div class="pub-item">
+      <div class="pub-n">04</div>
+      <div>
+        <div class="pub-title">A Method for Predicting Hemolytic Potency of Chemically Modified Peptides <span class="pub-badge pb-first">1st AUTHOR</span></div>
+        <div class="pub-authors"><strong>Kumar V.</strong>, Kumar R., Agrawal P., Patiyal S., Raghava G.P.S.</div>
+      </div>
+      <div class="pub-venue">Front. Pharmacol. · 2020</div>
+    </div>
+    <div class="pub-item">
+      <div class="pub-n">05</div>
+      <div>
+        <div class="pub-title">Prediction of Cell-Penetrating Potential of Modified Peptides <span class="pub-badge pb-first">1st AUTHOR</span></div>
+        <div class="pub-authors"><strong>Kumar V.</strong>, Agrawal P., Kumar R. et al.</div>
+      </div>
+      <div class="pub-venue">Front. Microbiol. · 2018</div>
+    </div>
+    <div class="pub-item">
+      <div class="pub-n">06</div>
+      <div>
+        <div class="pub-title">CancerEnD: A database of cancer-associated enhancers</div>
+        <div class="pub-authors">Kumar R., Lathwal A., <strong>Kumar V.</strong> et al.</div>
+      </div>
+      <div class="pub-venue">Genomics · 2020</div>
+    </div>
+    <div class="pub-item">
+      <div class="pub-n">07</div>
+      <div>
+        <div class="pub-title">Pfeature: Computing a Wide Range of Protein Features for Prediction Models</div>
+        <div class="pub-authors">Pande A., …, <strong>Kumar V.</strong>, Raghava G.P.S.</div>
+      </div>
+      <div class="pub-venue">J. Comput. Biol. · 2022</div>
+    </div>
+    <div class="pub-item">
+      <div class="pub-n">08</div>
+      <div>
+        <div class="pub-title">HumCFS: a database of fragile sites in human chromosomes</div>
+        <div class="pub-authors">Kumar R., Nagpal G., <strong>Kumar V.</strong> et al.</div>
+      </div>
+      <div class="pub-venue">BMC Genomics · 2019</div>
+    </div>
+    <div class="pub-item">
+      <div class="pub-n">09</div>
+      <div>
+        <div class="pub-title">Deciphering transcriptomics signatures in schizophrenia, bipolar disorder and MDD</div>
+        <div class="pub-authors">Bhardwaj P., Kumar R., <strong>Kumar V.</strong> et al.</div>
+      </div>
+      <div class="pub-venue">Front. Psychiatry · 2025</div>
+    </div>
+    <div class="pub-item">
+      <div class="pub-n">10</div>
+      <div>
+        <div class="pub-title">NAGbinder: Identifying N-acetylglucosamine interacting residues from primary sequence</div>
+        <div class="pub-authors">Patiyal S., Agrawal P., <strong>Kumar V.</strong> et al.</div>
+      </div>
+      <div class="pub-venue">Protein Science · 2020</div>
+    </div>
+  </div>
+  <div style="margin-top:1.5rem" class="reveal">
+    <a href="https://scholar.google.com/citations?user=Hg1nFFQAAAAJ" target="_blank" class="btn-ghost" style="font-size:11px">↗ All 14 publications + 3 book chapters on Google Scholar</a>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- TOOLS -->
+<section id="tools">
+  <div class="reveal">
+    <div class="sec-kicker">04 — Open-Source Tools</div>
+    <h2 class="sec-title">12 globally available<br>bioinformatics resources</h2>
+  </div>
+  <div class="tools-hex reveal" style="margin-top:2rem">
+    <a class="tool-hex" href="https://webs.iiitd.edu.in/raghava/b3pred/" target="_blank"><div class="tool-hex-name">B3Pred</div><div class="tool-hex-desc">ML prediction of blood-brain barrier penetrating peptides</div><div class="tool-hex-url">webs.iiitd.edu.in ↗</div></a>
+    <a class="tool-hex" href="https://webs.iiitd.edu.in/raghava/b3pdb/" target="_blank"><div class="tool-hex-name">B3Pdb</div><div class="tool-hex-desc">Repository of validated BBB-penetrating peptides</div><div class="tool-hex-url">webs.iiitd.edu.in ↗</div></a>
+    <a class="tool-hex" href="https://webs.iiitd.edu.in/raghava/hemopimod/" target="_blank"><div class="tool-hex-name">HemoPI-MOD</div><div class="tool-hex-desc">Haemolytic potential prediction for modified peptides</div><div class="tool-hex-url">webs.iiitd.edu.in ↗</div></a>
+    <a class="tool-hex" href="https://webs.iiitd.edu.in/raghava/cellppdmod/" target="_blank"><div class="tool-hex-name">CellPPD-MOD</div><div class="tool-hex-desc">Design of modified cell-penetrating peptides</div><div class="tool-hex-url">webs.iiitd.edu.in ↗</div></a>
+    <a class="tool-hex" href="https://webs.iiitd.edu.in/raghava/cancerend/" target="_blank"><div class="tool-hex-name">CancerEND</div><div class="tool-hex-desc">Cancer-associated enhancer database</div><div class="tool-hex-url">webs.iiitd.edu.in ↗</div></a>
+    <a class="tool-hex" href="https://webs.iiitd.edu.in/raghava/humcfs/" target="_blank"><div class="tool-hex-name">HumCFS</div><div class="tool-hex-desc">Human chromosomal fragile sites database</div><div class="tool-hex-url">webs.iiitd.edu.in ↗</div></a>
+    <a class="tool-hex" href="https://webs.iiitd.edu.in/raghava/nagbinder/" target="_blank"><div class="tool-hex-name">NAGbinder</div><div class="tool-hex-desc">N-acetylglucosamine binding residue predictor</div><div class="tool-hex-url">webs.iiitd.edu.in ↗</div></a>
+    <a class="tool-hex" href="https://webs.iiitd.edu.in/raghava/antitbpdb/" target="_blank"><div class="tool-hex-name">AntiTbPdb</div><div class="tool-hex-desc">Anti-tubercular peptide knowledgebase</div><div class="tool-hex-url">webs.iiitd.edu.in ↗</div></a>
+    <a class="tool-hex" href="https://webs.iiitd.edu.in/raghava/ccpdb/" target="_blank"><div class="tool-hex-name">ccPDB 2.0</div><div class="tool-hex-desc">Protein Data Bank dataset compilation</div><div class="tool-hex-url">webs.iiitd.edu.in ↗</div></a>
+    <a class="tool-hex" href="https://webs.iiitd.edu.in/raghava/denvind/" target="_blank"><div class="tool-hex-name">DenvInd</div><div class="tool-hex-desc">Dengue virus inhibitor database</div><div class="tool-hex-url">webs.iiitd.edu.in ↗</div></a>
+    <a class="tool-hex" href="https://webs.iiitd.edu.in/raghava/pfeature/" target="_blank"><div class="tool-hex-name">Pfeature</div><div class="tool-hex-desc">Protein and peptide feature computation platform</div><div class="tool-hex-url">webs.iiitd.edu.in ↗</div></a>
+    <a class="tool-hex" href="https://viz.datascience.arizona.edu/content/2d089f1d-2904-4888-b86f-70ca2fe7a297" target="_blank"><div class="tool-hex-name">snMRHDB</div><div class="tool-hex-desc">Interactive single-cell hypertension reference atlas</div><div class="tool-hex-url">viz.datascience.arizona.edu ↗</div></a>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SKILLS TERMINAL -->
+<section>
+  <div class="reveal">
+    <div class="sec-kicker">05 — Technical Skills</div>
+    <h2 class="sec-title">Full computational stack</h2>
+  </div>
+  <div class="terminal reveal">
+    <div class="terminal-bar">
+      <div class="terminal-dot td1"></div>
+      <div class="terminal-dot td2"></div>
+      <div class="terminal-dot td3"></div>
+      <span style="font-size:11px;color:var(--muted);margin-left:0.5rem">vinod@bioinformatics ~ skills.sh</span>
+    </div>
+    <div class="terminal-line"><span class="t-prompt">$</span><span class="t-cmd" style="margin-left:0.5rem">cat languages.txt</span></div>
+    <div class="terminal-line t-out">
+      <span class="t-tag tt-blue">Python</span><span class="t-tag tt-blue">R</span><span class="t-tag tt-blue">Perl</span><span class="t-tag tt-blue">Bash</span><span class="t-tag tt-blue">PHP</span><span class="t-tag tt-blue">JavaScript</span><span class="t-tag tt-blue">MySQL</span>
+    </div>
+    <div class="terminal-line" style="margin-top:0.6rem"><span class="t-prompt">$</span><span class="t-cmd" style="margin-left:0.5rem">cat single_cell_tools.txt</span></div>
+    <div class="terminal-line t-out">
+      <span class="t-tag tt-green">Seurat</span><span class="t-tag tt-green">Scanpy</span><span class="t-tag tt-green">ArchR</span><span class="t-tag tt-green">Celloracle</span><span class="t-tag tt-green">Cell2location</span><span class="t-tag tt-green">CellChat</span><span class="t-tag tt-green">Monocle</span><span class="t-tag tt-green">STAR</span>
+    </div>
+    <div class="terminal-line" style="margin-top:0.6rem"><span class="t-prompt">$</span><span class="t-cmd" style="margin-left:0.5rem">cat ml_frameworks.txt</span></div>
+    <div class="terminal-line t-out">
+      <span class="t-tag tt-gold">scikit-learn</span><span class="t-tag tt-gold">PyTorch</span><span class="t-tag tt-gold">SVM</span><span class="t-tag tt-gold">Random Forest</span><span class="t-tag tt-gold">Neural Networks</span><span class="t-tag tt-gold">WEKA</span>
+    </div>
+    <div class="terminal-line" style="margin-top:0.6rem"><span class="t-prompt">$</span><span class="t-cmd" style="margin-left:0.5rem">cat genomics_tools.txt</span></div>
+    <div class="terminal-line t-out">
+      <span class="t-tag tt-blue">DESeq2</span><span class="t-tag tt-blue">OUTRIDER</span><span class="t-tag tt-blue">FRASER</span><span class="t-tag tt-blue">SpliceAI</span><span class="t-tag tt-blue">PrimateAI</span><span class="t-tag tt-blue">ANNOVAR</span><span class="t-tag tt-blue">VEP</span><span class="t-tag tt-blue">PLINK</span>
+    </div>
+    <div class="terminal-line" style="margin-top:0.6rem"><span class="t-prompt">$</span><span class="t-cmd" style="margin-left:0.5rem">cat computing.txt</span></div>
+    <div class="terminal-line t-out">
+      <span class="t-tag tt-green">HPC/SLURM</span><span class="t-tag tt-green">Git</span><span class="t-tag tt-green">Docker</span><span class="t-tag tt-green">Singularity</span><span class="t-tag tt-green">Jupyter</span>
+    </div>
+    <div class="terminal-line" style="margin-top:0.8rem"><span class="t-prompt">$</span><span style="margin-left:0.5rem"></span><span class="t-cursor"></span></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="reveal">
+    <div class="sec-kicker">06 — Contact</div>
+    <h2 class="sec-title">Let's build<br>something together</h2>
+  </div>
+  <div class="contact-section reveal">
+    <div>
+      <div class="contact-big">Open to<br><em>opportunities</em><br>worldwide</div>
+      <p style="color:var(--muted);font-size:14px;line-height:1.8;margin-top:1.5rem">
+        Computational biology · Multi-omics · AI-driven drug discovery.<br>
+        Open to postdoctoral, industry, and collaborative positions in Europe, the US, and India.
+      </p>
+    </div>
+    <div class="contact-links">
+      <a class="clink" href="mailto:vinodporiya032@gmail.com">
+        <div class="clink-icon">&#9993;</div>
+        <div><div class="clink-label">Email</div><div class="clink-value">vinodporiya032@gmail.com</div></div>
+      </a>
+      <a class="clink" href="https://orcid.org/0000-0001-8098-9901" target="_blank">
+        <div class="clink-icon">ID</div>
+        <div><div class="clink-label">ORCID</div><div class="clink-value">0000-0001-8098-9901</div></div>
+      </a>
+      <a class="clink" href="https://scholar.google.com/citations?user=Hg1nFFQAAAAJ" target="_blank">
+        <div class="clink-icon">&#x25A6;</div>
+        <div><div class="clink-label">Google Scholar</div><div class="clink-value">500+ citations · 14 publications</div></div>
+      </a>
+      <a class="clink" href="https://github.com/Vinniporiya" target="_blank">
+        <div class="clink-icon">&#x2022;</div>
+        <div><div class="clink-label">GitHub</div><div class="clink-value">github.com/Vinniporiya</div></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  VINOD KUMAR Ph.D. &nbsp;·&nbsp; Computational Biologist &nbsp;·&nbsp; Karnal, Haryana, India &nbsp;·&nbsp; 2026
+</footer>
+
+<script>
+// ── CUSTOM CURSOR ──
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing)}
+animRing();
+
+// ── DNA HELIX CANVAS ──
+(function(){
+  const c=document.getElementById('dna-canvas');
+  const ctx=c.getContext('2d');
+  function resize(){c.width=window.innerWidth;c.height=window.innerHeight}
+  resize();window.addEventListener('resize',resize);
+  const bases=['A','T','G','C'];
+  const colors={A:'rgba(0,229,255,',T:'rgba(0,255,159,',G:'rgba(255,209,102,',C:'rgba(200,100,255,'};
+  let t=0;
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    const helices=3;
+    for(let h=0;h<helices;h++){
+      const xBase=c.width*0.15+h*(c.width*0.35);
+      const amp=40;
+      const freq=0.02;
+      const speed=0.4;
+      for(let y=0;y<c.height+40;y+=6){
+        const phase=t*speed+h*2.1;
+        const x1=xBase+Math.sin(y*freq+phase)*amp;
+        const x2=xBase+Math.sin(y*freq+phase+Math.PI)*amp;
+        const brightness=0.3+0.4*Math.abs(Math.sin(y*freq+phase));
+        ctx.beginPath();ctx.arc(x1,y,1.5,0,Math.PI*2);
+        ctx.fillStyle=`rgba(0,229,255,${brightness*0.6})`;ctx.fill();
+        ctx.beginPath();ctx.arc(x2,y,1.5,0,Math.PI*2);
+        ctx.fillStyle=`rgba(0,255,159,${brightness*0.4})`;ctx.fill();
+        if(y%24===0){
+          const bIdx=Math.floor(y/24)%4;
+          const b=bases[bIdx];
+          const col=colors[b];
+          ctx.beginPath();ctx.moveTo(x1,y);ctx.lineTo(x2,y);
+          ctx.strokeStyle=col+brightness*0.5+')';
+          ctx.lineWidth=1;ctx.stroke();
+          ctx.font=`${7+brightness*4}px 'Syne Mono'`;
+          ctx.fillStyle=col+(brightness*0.8)+')';
+          ctx.textAlign='center';
+          ctx.fillText(b,x1+(x2-x1)*0.25,y+3);
+          ctx.fillText(b,x1+(x2-x1)*0.75,y+3);
+        }
+      }
+    }
+    t+=0.3;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── PARTICLE SYSTEM ──
+(function(){
+  const c=document.getElementById('particle-canvas');
+  const ctx=c.getContext('2d');
+  function resize(){c.width=window.innerWidth;c.height=window.innerHeight}
+  resize();window.addEventListener('resize',resize);
+  const N=80;
+  const pts=Array.from({length:N},()=>({
+    x:Math.random()*window.innerWidth,
+    y:Math.random()*window.innerHeight,
+    vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,
+    r:Math.random()*1.5+0.5,
+    o:Math.random()*0.4+0.1
+  }));
+  let mousex=null,mousey=null;
+  document.addEventListener('mousemove',e=>{mousex=e.clientX;mousey=e.clientY});
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    pts.forEach(p=>{
+      if(mousex!==null){
+        const dx=p.x-mousex,dy=p.y-mousey,d=Math.sqrt(dx*dx+dy*dy);
+        if(d<120){p.vx+=dx/d*0.04;p.vy+=dy/d*0.04}
+      }
+      p.x+=p.vx;p.y+=p.vy;
+      p.vx*=0.99;p.vy*=0.99;
+      if(p.x<0||p.x>c.width)p.vx*=-1;
+      if(p.y<0||p.y>c.height)p.vy*=-1;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(0,229,255,${p.o})`;ctx.fill();
+    });
+    for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){
+      const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<120){
+        ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
+        ctx.strokeStyle=`rgba(0,229,255,${(1-d/120)*0.12})`;ctx.lineWidth=0.5;ctx.stroke();
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── MOLECULAR NETWORK ──
+(function(){
+  const c=document.getElementById('mol-canvas');
+  if(!c)return;
+  const ctx=c.getContext('2d');
+  c.width=c.offsetWidth;c.height=400;
+  window.addEventListener('resize',()=>{c.width=c.offsetWidth});
+  const labels=['snRNA-seq','ATAC-seq','DESeq2','SpliceAI','Seurat','CellChat','ArchR','OUTRIDER','Celloracle','GSEA','Cell2loc','PrimateAI','FRASER','scRNA','WGS','Hi-C'];
+  const nodes=labels.map(l=>({
+    x:Math.random()*(c.width*0.7)+c.width*0.02,
+    y:Math.random()*360+20,
+    vx:(Math.random()-0.5)*0.4,vy:(Math.random()-0.5)*0.4,
+    r:Math.random()*6+8,
+    label:l,
+    color:Math.random()<0.5?'rgba(0,229,255,':'rgba(0,255,159,'
+  }));
+  const edges=[];
+  for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){
+    if(Math.random()<0.25)edges.push([i,j]);
+  }
+  let mx=null,my=null;
+  c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top});
+  c.addEventListener('mouseleave',()=>{mx=null;my=null});
+  let t=0;
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    nodes.forEach(n=>{
+      if(mx!==null){
+        const dx=n.x-mx,dy=n.y-my,d=Math.sqrt(dx*dx+dy*dy);
+        if(d<100){n.vx+=dx/d*0.15;n.vy+=dy/d*0.15}
+      }
+      n.x+=n.vx;n.y+=n.vy;
+      n.vx*=0.97;n.vy*=0.97;
+      if(n.x<n.r){n.vx=Math.abs(n.vx);n.x=n.r}
+      if(n.x>c.width*0.72-n.r){n.vx=-Math.abs(n.vx);n.x=c.width*0.72-n.r}
+      if(n.y<n.r){n.vy=Math.abs(n.vy);n.y=n.r}
+      if(n.y>c.height-n.r){n.vy=-Math.abs(n.vy);n.y=c.height-n.r}
+    });
+    edges.forEach(([i,j])=>{
+      const a=nodes[i],b=nodes[j];
+      const d=Math.sqrt((a.x-b.x)**2+(a.y-b.y)**2);
+      ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+      ctx.strokeStyle=`rgba(0,229,255,${Math.max(0,0.15*(1-d/250))})`;
+      ctx.lineWidth=0.8;ctx.stroke();
+    });
+    nodes.forEach(n=>{
+      const pulse=0.7+0.3*Math.sin(t*0.05+n.x*0.01);
+      ctx.beginPath();ctx.arc(n.x,n.y,n.r*pulse,0,Math.PI*2);
+      ctx.fillStyle=n.color+'0.15)';ctx.fill();
+      ctx.strokeStyle=n.color+'0.7)';ctx.lineWidth=1;ctx.stroke();
+      ctx.fillStyle=n.color+'0.9)';
+      ctx.font=`${Math.max(8,n.r-2)}px 'Syne Mono'`;
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(n.label,n.x,n.y);
+    });
+    t++;requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── GENOME SEQUENCE TYPEWRITER ──
+(function(){
+  const bases='ATGCATGCGCATGCATCGATCGGCATCGATCGATCGATCGCGCGCATGCATGCATCG';
+  const highlight=[0,3,6,9,12];
+  const el=document.getElementById('seq-text');
+  if(!el)return;
+  let i=0,direction=1;
+  function tick(){
+    let out='';
+    for(let k=0;k<Math.min(i,bases.length);k++){
+      if(highlight.includes(k%10)){
+        out+=`<span>${bases[k]}</span>`;
+      }else{
+        out+=`<span style="color:var(--muted)">${bases[k]}</span>`;
+      }
+    }
+    el.innerHTML=out;
+    i+=direction;
+    if(i>bases.length){direction=-1}
+    if(i<0){direction=1}
+    setTimeout(tick,direction===1?60:20);
+  }
+  tick();
+})();
+
+// ── COUNT-UP ANIMATION ──
+function countUp(id,target,suffix=''){
+  const el=document.getElementById(id);
+  if(!el)return;
+  let n=0;
+  const step=Math.ceil(target/60);
+  const t=setInterval(()=>{
+    n=Math.min(n+step,target);
+    el.textContent=n+(n===target?suffix:'');
+    if(n>=target)clearInterval(t);
+  },25);
+}
+setTimeout(()=>{
+  countUp('n-pubs',14,'+');
+  countUp('n-cite',500,'+');
+  countUp('n-tools',12,'');
+  countUp('n-years',8,'+');
+},400);
+
+// ── SCROLL REVEAL ──
+const obs=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')});
+},{threshold:0.07});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
